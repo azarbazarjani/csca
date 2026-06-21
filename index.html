@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Show</title>
+
+<style>
+body{
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:Tahoma,sans-serif;
+}
+
+#controls{
+    padding:20px;
+    background:#111;
+    text-align:center;
+}
+
+textarea{
+    width:90%;
+    height:180px;
+    padding:10px;
+    font-size:16px;
+}
+
+button,input{
+    margin:5px;
+    padding:10px;
+}
+
+#display{
+    height:calc(100vh - 320px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    white-space:pre-line;
+    overflow:hidden;
+    position:relative;
+}
+
+.credit-text{
+    position:absolute;
+    width:100%;
+}
+
+@keyframes credits{
+    from{
+        transform:translateY(100%);
+    }
+    to{
+        transform:translateY(-150%);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="controls">
+
+<h2>نمایش متن</h2>
+
+<textarea id="text"></textarea>
+
+<br>
+
+<label>اندازه فونت:</label>
+<input type="range" id="fontSize" min="20" max="80" value="40">
+
+<label>سرعت تیتراژ:</label>
+<input type="range" id="speed" min="5" max="60" value="20">
+
+<br>
+
+<button onclick="showAll()">نمایش یکجا</button>
+<button onclick="lineByLine()">خط به خط</button>
+<button onclick="credits()">تیتراژ</button>
+<button onclick="fullscreenMode()">تمام صفحه</button>
+
+</div>
+
+<div id="display"></div>
+
+<script>
+
+function getFontSize(){
+    return document.getElementById("fontSize").value + "px";
+}
+
+function showAll(){
+    let text=document.getElementById("text").value;
+    let display=document.getElementById("display");
+
+    display.innerHTML=text;
+    display.style.fontSize=getFontSize();
+}
+
+function lineByLine(){
+
+    let lines=document.getElementById("text").value.split("\n");
+    let display=document.getElementById("display");
+
+    display.innerHTML="";
+    display.style.fontSize=getFontSize();
+
+    lines.forEach((line,index)=>{
+        setTimeout(()=>{
+            display.innerHTML += line + "<br>";
+        },index*1000);
+    });
+}
+
+function credits(){
+
+    let text=document.getElementById("text").value.replace(/\n/g,"<br>");
+    let speed=document.getElementById("speed").value;
+
+    let display=document.getElementById("display");
+
+    display.innerHTML=
+    `<div class="credit-text"
+      style="
+      font-size:${getFontSize()};
+      animation:credits ${speed}s linear forwards;">
+      ${text}
+     </div>`;
+}
+
+function fullscreenMode(){
+
+    if(document.documentElement.requestFullscreen){
+        document.documentElement.requestFullscreen();
+    }
+}
+
+</script>
+
+</body>
+</html>
